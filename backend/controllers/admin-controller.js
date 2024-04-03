@@ -64,3 +64,37 @@ export const adminLogin = async (req, res, next) => {
     .status(200)
     .json({ message: "Authentication Complete", token, id: existingAdmin._id });
 };
+
+export const getAdmin = async (req,res,next) =>{
+  let admins;
+
+  try {
+    admins = await Admin.find();
+  } catch (error) {
+    return next(error)
+  }
+
+  if(!admins){
+    return res.status(500).json({message:'Internal Server Error'})
+  }
+
+  return res.status(200).json({admins});
+}
+
+export const getAdminById = async (req,res,next) =>{
+  const id = req.params.id;
+
+  let admin;
+
+  try {
+    admin = await Admin.findById(id).populate("addedMovies");
+  } catch (error) {
+    return next(error)
+  }
+
+  if(!admin){
+    return console.log("Cannaot find Admin");
+  }
+
+  return res.status(200).json({admin});
+}

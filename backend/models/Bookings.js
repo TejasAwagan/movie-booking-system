@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Movie from "./Movie";
 
 const bookingSchema = new mongoose.Schema({
   movie: {
