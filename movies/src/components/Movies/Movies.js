@@ -5,13 +5,11 @@ import MovieItem from "./MovieItem";
 
 const Movies = () => {
   const [movies, setMovies] = useState();
-
   useEffect(() => {
     getAllMovies()
       .then((data) => setMovies(data.movies))
       .catch((err) => console.log(err));
   }, []);
-  
   return (
     <Box margin={"auto"} marginTop={4}>
       <Typography

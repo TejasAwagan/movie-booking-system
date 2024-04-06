@@ -1,22 +1,21 @@
 import User from "../models/User";
 import bcrypt from "bcryptjs";
+import Bookings from "../models/Bookings";
 
-
-export const getAllUser = async (req, res, next) => {
+export const getAllUsers = async (req, res, next) => {
   let users;
   try {
     users = await User.find();
-  } catch (error) {
-    return next(error);
+  } catch (err) {
+    return console.log(err);
   }
-
   if (!users) {
     return res.status(500).json({ message: "Unexpected Error Occured" });
   }
   return res.status(200).json({ users });
 };
 
-export const signUp = async (req, res, next) => {
+export const singup = async (req, res, next) => {
   const { name, email, password } = req.body;
   if (
     !name &&
@@ -28,24 +27,19 @@ export const signUp = async (req, res, next) => {
   ) {
     return res.status(422).json({ message: "Invalid Inputs" });
   }
-
   const hashedPassword = bcrypt.hashSync(password);
-
   let user;
   try {
     user = new User({ name, email, password: hashedPassword });
     user = await user.save();
-  } catch (error) {
-    return next(error);
+  } catch (err) {
+    return console.log(err);
   }
-
   if (!user) {
     return res.status(500).json({ message: "Unexpected Error Occured" });
   }
-
-  return res.status(201).json({ user });
+  return res.status(201).json({ id: user._id });
 };
-
 export const updateUser = async (req, res, next) => {
   const id = req.params.id;
   const { name, email, password } = req.body;
@@ -59,14 +53,14 @@ export const updateUser = async (req, res, next) => {
   ) {
     return res.status(422).json({ message: "Invalid Inputs" });
   }
-  const hashedPassword = bcrypt.hashSync(password,10);
+  const hashedPassword = bcrypt.hashSync(password);
 
   let user;
   try {
     user = await User.findByIdAndUpdate(id, {
       name,
       email,
-      password:hashedPassword,
+      password: hashedPassword,
     });
   } catch (errr) {
     return console.log(errr);
@@ -81,7 +75,7 @@ export const deleteUser = async (req, res, next) => {
   const id = req.params.id;
   let user;
   try {
-    user = await User.findByIdAndDelete(id);
+    user = await User.findByIdAndRemove(id);
   } catch (err) {
     return console.log(err);
   }
@@ -119,7 +113,6 @@ export const login = async (req, res, next) => {
     .status(200)
     .json({ message: "Login Successfull", id: existingUser._id });
 };
-
 export const getBookingsOfUser = async (req, res, next) => {
   const id = req.params.id;
   let bookings;
@@ -135,7 +128,6 @@ export const getBookingsOfUser = async (req, res, next) => {
   }
   return res.status(200).json({ bookings });
 };
-
 export const getUserById = async (req, res, next) => {
   const id = req.params.id;
   let user;

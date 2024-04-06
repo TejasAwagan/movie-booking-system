@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import Admin from "../models/Admin";
 import Movie from "../models/Movie";
-import mongoose from "mongoose";
-
 export const addMovie = async (req, res, next) => {
   const extractedToken = req.headers.authorization.split(" ")[1];
   if (!extractedToken && extractedToken.trim() === "") {
@@ -69,14 +68,13 @@ export const getAllMovies = async (req, res, next) => {
 
   try {
     movies = await Movie.find();
-  } catch (error) {
-    return next(error);
+  } catch (err) {
+    return console.log(err);
   }
 
   if (!movies) {
     return res.status(500).json({ message: "Request Failed" });
   }
-
   return res.status(200).json({ movies });
 };
 

@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { sendUserAuthRequest } from "../../api-helpers/api-helpers";
-import { userActions } from "../../store";
-import AuthForm from "./AuthForm";
+import { sendUserAuthRequest } from "../../api-helpers/api-helpers.js";
+import { userActions } from "../../store/index.js";
+import AuthForm from "./AuthForm.js";
 
 const Auth = () => {
   const navigate = useNavigate();
