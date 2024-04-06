@@ -1,82 +1,38 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./Carousel.css";
 
-export const CarouselItem = ({ children, width }) => {
+function AutoPlay() {
+  const settings = {
+    dots: true,
+    infinite: true,
+    slidesToShow: 2,
+    slidesToScroll:1,
+    autoplay: true,
+    speed: 1000,
+    autoplaySpeed: 2000,
+    cssEase: "linear"
+  };
   return (
-    <div className="carousel-item" style={{ width: width }}>
-      {children}
+    <div className="slider-container ">
+      <Slider {...settings}>
+        <div className="images">
+        <img alt="img3" src="https://www.radiocity.in/images/uploads/swatantrya-veer-savarkar-trailer-out-starring-randeep-hooda-march5_d.jpg" width={"100%"} height={"100%"} />
+        </div>
+        <div>
+        <img alt="img2" src="https://e24bollywood.com/wp-content/uploads/2024/01/Shaitaan-Teaser-ajay-devgn-r-madhwan-jyotika.jpg" width={"100%"} height={"100%"} />
+        </div>
+        <div>
+        <img alt="img3" src="https://wallpapercave.com/wp/wp10254448.jpg" width={"100%"} height={"100%"} />
+        </div>
+        <div>
+        <img alt="img4" src="https://statcdn.fandango.com/MPX/image/NBCU_Fandango/818/451/GxK.jpg" width={"100%"} height={"100%"} />
+        </div>
+      </Slider>
     </div>
   );
-};
+}
 
-const Carousel = ({ children }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const swipe = useRef({});
-
-  const updateIndex = (newIndex) => {
-    if (newIndex >= React.Children.count(children) || newIndex < 0) {
-      newIndex = 0;
-    }
-    setActiveIndex(newIndex);
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      updateIndex(activeIndex + 1);
-    }, 2000);
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [activeIndex]);
-
-  const onTouchStart = (e) => {
-    const touch = e.touches[0];
-    swipe.current = { x: touch.clientX };
-    console.log("TOUCH >>>> START");
-  };
-
-  const onTouchMove = (e) => {
-    if (e.changedTouches && e.changedTouches.length) {
-      swipe.current.swiping = true;
-    }
-    console.log("TOUCH >>>> MOVE");
-  };
-
-  const onTouchEnd = (e) => {
-    const touch = e.changedTouches[0];
-    const swipedLeft = touch.clientX - swipe.current.x > 0 ? true : false;
-    const swipedRight = touch.clientX - swipe.current.x > 0 ? false : true;
-    const absX = Math.abs(touch.clientX - swipe.current.x);
-    if (swipe.current.swiping && absX > 50) {
-      if (swipedLeft) {
-        updateIndex(activeIndex - 1);
-      } else if (swipedRight) {
-        updateIndex(activeIndex + 1);
-      }
-    }
-    swipe.current = {};
-    console.log("TOUCH >>>> END");
-  };
-
-  return (
-    <div
-      className="carousel"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      <div
-        className="inner"
-        style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-      >
-        {React.Children.map(children, (child) => {
-          return React.cloneElement(child, { width: "100%" });
-        })}
-      </div>
-    </div>
-  );
-};
-
-export default Carousel;
+export default AutoPlay;
