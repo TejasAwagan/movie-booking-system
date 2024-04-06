@@ -38,27 +38,30 @@ const Booking = () => {
             variant="h4"
             textAlign={"center"}
           >
-            Book Tickets Of Movie: {movie.title}
+            Book Tickets Of Movie : {movie.title}
           </Typography>
-          <Box display={"flex"} justifyContent={"center"}>
+          <Box display={"flex"} justifyContent={"center"} bgcolor={"rgb(51 65 85)"}>
             <Box
               display={"flex"}
               justifyContent={"column"}
               flexDirection="column"
               paddingTop={3}
-              width="50%"
+              paddingLeft={3}
+              width="70%"
               marginRight={"auto"}
+              borderRadius={"18px"}
             >
               <img
-                width="80%"
-                height={"300px"}
+                width="70%"
+                height={"340px"}
                 src={movie.posterUrl}
                 alt={movie.title}
+            
               />
               <Box width={"80%"} marginTop={3} padding={2}>
-                <Typography paddingTop={2}>{movie.description}</Typography>
-                <Typography fontWeight={"bold"} marginTop={1}>
-                  Starrer:
+                <Typography paddingTop={2} >{movie.description}</Typography>
+                <Typography fontWeight={"bold"} marginTop={1} >
+                  Star Cast :
                   {movie.actors.map((actor) => " " + actor + " ")}
                 </Typography>
                 <Typography fontWeight={"bold"} marginTop={1}>
@@ -74,7 +77,7 @@ const Booking = () => {
                   display="flex"
                   flexDirection={"column"}
                 >
-                  <FormLabel>Seat Number</FormLabel>
+                  <FormLabel sx={{color:"#fff"}}>Seat Number</FormLabel>
                   <TextField
                     name="seatNumber"
                     value={inputs.seatNumber}
@@ -82,8 +85,9 @@ const Booking = () => {
                     type={"number"}
                     margin="normal"
                     variant="standard"
+                    sx={{bgcolor:"#fff", width:"100%", borderRadius:"18px", paddingLeft:"8px",paddingRight:"8px"}}
                   />
-                  <FormLabel>Booking Date</FormLabel>
+                  <FormLabel sx={{color:"#fff"}}>Booking Date</FormLabel>
                   <TextField
                     name="date"
                     type={"date"}
@@ -91,8 +95,10 @@ const Booking = () => {
                     variant="standard"
                     value={inputs.date}
                     onChange={handleChange}
+                    sx={{bgcolor:"#fff", width:"100%", borderRadius:"18px", paddingLeft:"8px",paddingRight:"8px"}}
+                    
                   />
-                  <Button type="submit" sx={{ mt: 3 }}>
+                  <Button type="submit" sx={{ mt: 3, bgcolor:"rgb(8 47 73)", height:"50px", width:"100%", borderRadius:"18px",color:"#fff",":hover":{bgcolor:"rgb(3 105 161)"} }}>
                     Book Now
                   </Button>
                 </Box>

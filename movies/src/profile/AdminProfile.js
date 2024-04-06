@@ -59,6 +59,7 @@ const AdminProfile = () => {
               fontFamily={"verdana"}
               textAlign="center"
               padding={2}
+              fontWeight="800"
             >
               Added Movies
             </Typography>

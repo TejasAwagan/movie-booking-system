@@ -49,12 +49,13 @@ const User = () => {
           Name: {bookings.length > 1 && bookings[0].user.name}
         </Typography>
       </Box>
-      <Box width="70%" display="flex" flexDirection={"column"}>
+      <Box width="70%" display="flex" flexDirection={"column"} >
         <Typography
           variant="h3"
           fontFamily={"verdana"}
           textAlign="center"
           padding={2}
+          color="#fff"
         >
           Bookings
         </Typography>

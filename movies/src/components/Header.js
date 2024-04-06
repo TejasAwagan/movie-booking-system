@@ -51,7 +51,7 @@ const Header = () => {
             options={movies && movies.map((option) => option.title)}
             renderInput={(params) => (
               <TextField
-                sx={{ input: { color: "white" } }}
+                sx={{ input: { color: "#ffff" } }}
                 variant="standard"
                 {...params}
                 placeholder="Search Acroos Multiple Movies"

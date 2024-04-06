@@ -37,43 +37,55 @@ const AddMovie = () => {
   };
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
         <Box
-          width={"50%"}
+          width={"40%"}
           padding={10}
           margin="auto"
+          marginTop={5}
+          marginBottom={5}
           display={"flex"}
           flexDirection="column"
-          boxShadow={"10px 10px 20px #ccc"}
+          // boxShadow= {"rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px"}
+          boxShadow={"-1px 4px 31px -1px #fff"} 
+          
+          sx={{bgcolor:"rgb(82 82 91)", borderRadius:"20px"}}
         >
-          <Typography textAlign={"center"} variant="h5" fontFamily={"verdana"}>
+          <Typography textAlign={"center"}  fontFamily={"verdana"} fontSize={"3.5rem"} fontWeight={800}>
             Add New Movie
           </Typography>
-          <FormLabel sx={labelProps}>Title</FormLabel>
+
+          <FormLabel sx={{labelProps, color:"#fff"}}>Title</FormLabel>
           <TextField
             value={inputs.title}
             onChange={handleChange}
             name="title"
             variant="standard"
             margin="normal"
+            style={{color:"#fff"}}
+            sx={{color:"#fff", borderRadius:"10px", bgcolor:"white", textUnderlineOffset:"#fff", paddingLeft:"8px"}}
           />
-          <FormLabel sx={labelProps}>Description</FormLabel>
+          <FormLabel sx={{labelProps, color:"#fff"}}>Description</FormLabel>
           <TextField
             value={inputs.description}
             onChange={handleChange}
             name="description"
             variant="standard"
             margin="normal"
+            style={{color:"white"}}
+            sx={{color:"#fff", borderRadius:"10px", bgcolor:"white", textUnderlineOffset:"#fff", paddingLeft:"8px"}}
           />
-          <FormLabel sx={labelProps}>Poster URL</FormLabel>
+          <FormLabel sx={{labelProps, color:"#fff"}}>Poster URL</FormLabel>
           <TextField
             value={inputs.posterUrl}
             onChange={handleChange}
             name="posterUrl"
             variant="standard"
             margin="normal"
+            sx={{color:"#fff", borderRadius:"10px", bgcolor:"white", textUnderlineOffset:"#fff", paddingLeft:"8px"}}
+
           />
-          <FormLabel sx={labelProps}>Release Date</FormLabel>
+          <FormLabel sx={{labelProps, color:"#fff"}}>Release Date</FormLabel>
           <TextField
             type={"date"}
             value={inputs.releaseDate}
@@ -81,8 +93,9 @@ const AddMovie = () => {
             name="releaseDate"
             variant="standard"
             margin="normal"
+            sx={{color:"#fff", borderRadius:"10px", bgcolor:"white", paddingRight:"10px", paddingLeft:"8px"}}
           />
-          <FormLabel sx={labelProps}>Actor</FormLabel>
+          <FormLabel sx={{labelProps, color:"#fff"}}>Actor</FormLabel>
           <Box display={"flex"}>
             <TextField
               value={actor}
@@ -90,6 +103,7 @@ const AddMovie = () => {
               onChange={(e) => setActor(e.target.value)}
               variant="standard"
               margin="normal"
+              sx={{color:"#fff", bgcolor:"#fff", borderRadius:"10px", border:"none",paddingLeft:"8px"}}
             />
             <Button
               onClick={() => {
@@ -100,7 +114,7 @@ const AddMovie = () => {
               Add
             </Button>
           </Box>
-          <FormLabel sx={labelProps}>Featured</FormLabel>
+          <FormLabel sx={{labelProps, color:"#fff"}}>Featured</FormLabel>
           <Checkbox
             name="fetaured"
             checked={inputs.featured}
@@ -110,13 +124,14 @@ const AddMovie = () => {
                 featured: e.target.checked,
               }))
             }
-            sx={{ mr: "auto" }}
+            sx={{ mr: "auto", color:"#fff" }}
           />
           <Button
             type="submit"
             variant="contained"
             sx={{
               width: "30%",
+              color:"#fff",
               margin: "auto",
               bgcolor: "#2b2d42",
               ":hover": {

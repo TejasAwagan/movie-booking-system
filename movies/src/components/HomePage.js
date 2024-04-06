@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { getAllMovies } from "../api-helpers/api-helpers";
 import MovieItem from "./Movies/MovieItem";
 import AutoPlay from "./Carousel/Carousel.js";
-
+// book it now , book curve,
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
   useEffect(() => {
@@ -16,31 +16,11 @@ const HomePage = () => {
   return (
     <Box width={"100%"} height="100%" margin="auto" marginTop={2}>
       <Box margin={"auto"} width="100%" height={"60vh"} padding={1}>
-      <AutoPlay />
-        {/* <img
-          src="https://i.ytimg.com/vi/bweRG6WueuM/maxresdefault.jpg"
-          alt="Brahmastra"
-          width={"100%"}
-          height={"100%"}
-        /> 
-         <AutoPlayMethods />   */}
+        <AutoPlay />
       </Box>
-      {/* <Box width={"80%"} height={"80%"} margin="auto" marginTop={1}>
-        <Carousel>
-          <CarouselItem>
-            <Slide number={1} />
-          </CarouselItem>
-          <CarouselItem>
-            <Slide number={2} />
-          </CarouselItem>
-          <CarouselItem>
-            <Slide number={3} />
-          </CarouselItem>
-        </Carousel>
-      </Box> */}
 
       <Box padding={8} margin="auto">
-        <Typography variant="h4" textAlign={"center"}>
+        <Typography fontSize={"4rem"} textAlign={"center"} fontWeight={"800"} color={"#fff"}>
           Latest Releases
         </Typography>
       </Box>
@@ -70,7 +50,7 @@ const HomePage = () => {
           LinkComponent={Link}
           to="/movies"
           variant="outlined"
-          sx={{ margin: "auto", color: "#2b2d42" }}
+          sx={{ margin: "auto", color: "#fff"}}
         >
           View All Movies
         </Button>

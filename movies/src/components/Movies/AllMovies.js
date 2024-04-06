@@ -13,7 +13,7 @@ const AllMovies = () => {
   }, []);
   return (
     <Box margin="auto" marginTop={4}>
-      <Typography variant="h4" padding={2} textAlign="center" borderRadius={6}>
+      <Typography variant="h4" padding={2} textAlign="center" borderRadius={6} sx={{borderRadius:"18px"}}>
         All Movies
       </Typography>
       <Box
