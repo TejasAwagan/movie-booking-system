@@ -1,7 +1,7 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import {PersonRoundedIcon,DeleteForeverOutlined} from "@mui/icons-material/PersonRounded";
+import { List, ListItem, ListItemText, Typography, IconButton } from "@mui/material";
 import { getAdmidData } from "../../api-helpers/api-helpers.js";
 const Admin = () => {
   const [admin, setAdmim] = useState();
@@ -14,6 +14,7 @@ const Admin = () => {
       .catch((err) => console.log(err));
   }, []);
   console.log(admin);
+
   return (
     <Box width="100%" display={"flex"}>
       <Box

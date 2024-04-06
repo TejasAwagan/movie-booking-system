@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { getAllMovies } from "../api-helpers/api-helpers";
 import MovieItem from "./Movies/MovieItem";
 import AutoPlay from "./Carousel/Carousel.js";
-// book it now , book curve,
+
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
   useEffect(() => {

@@ -11,3 +11,10 @@ body {
 code {
   font-family: "Roboto", sans-serif;
 }
+
+.logo-name{
+  color: #fff;
+  padding-left: 5px;
+  font-family: "Roboto", sans-serif;
+  font-size: 2rem;
+}

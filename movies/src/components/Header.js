@@ -14,6 +14,7 @@ import { getAllMovies } from "../api-helpers/api-helpers";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { adminActions, userActions } from "../store/index";
+import { Label } from "@mui/icons-material";
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const Header = () => {
       <Toolbar>
         <Box width={"20%"}>
           <IconButton LinkComponent={Link} to="/">
-            <MovieIcon />
+            <MovieIcon sx={{color:"#fff"}} /> <label className="logo-name">ShowTimeBookings</label>
           </IconButton>
         </Box>
         <Box width={"30%"} margin="auto">
