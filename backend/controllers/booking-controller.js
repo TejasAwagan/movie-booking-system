@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import Bookings from "../models/Bookings";
 import Movie from "../models/Movie";
 import User from "../models/User";
+import {ApiError} from "../utils/ApiError";
+import {ApiResponse} from "../utils/ApiResponse";
 
 export const newBooking = async (req, res, next) => {
   const { movie, date, seatNumber, user } = req.body;
@@ -15,10 +17,12 @@ export const newBooking = async (req, res, next) => {
     return console.log(err);
   }
   if (!existingMovie) {
-    return res.status(404).json({ message: "Movie Not Found With Given ID" });
+    // return res.status(404).json({ message: "Movie Not Found With Given ID" });
+    throw new ApiError(404, "Movie Not Found With Given ID");
   }
   if (!user) {
-    return res.status(404).json({ message: "User not found with given ID " });
+    // return res.status(404).json({ message: "User not found with given ID " });
+    throw new ApiError(404, "User not found with given ID")
   }
   let booking;
 
@@ -42,10 +46,13 @@ export const newBooking = async (req, res, next) => {
   }
 
   if (!booking) {
-    return res.status(500).json({ message: "Unable to create a booking" });
+    // return res.status(500).json({ message: "Unable to create a booking" });
+    throw new ApiError(500,"Unable to create a booking")
   }
 
-  return res.status(201).json({ booking });
+  return res.status(201).json(
+    new ApiResponse(201, booking, "New Booking Added Successfully")
+  );
 };
 
 export const getBookingById = async (req, res, next) => {
@@ -57,9 +64,12 @@ export const getBookingById = async (req, res, next) => {
     return console.log(err);
   }
   if (!booking) {
-    return res.status(500).json({ message: "Unexpected Error" });
+    // return res.status(500).json({ message: "Unexpected Error" });
+    throw new ApiError(500, "Unexpected Error");
   }
-  return res.status(200).json({ booking });
+  return res.status(200).json(
+    new ApiResponse(200, booking, "Booking fetched Successfully")
+  );
 };
 
 export const deleteBooking = async (req, res, next) => {
@@ -79,7 +89,10 @@ export const deleteBooking = async (req, res, next) => {
     return console.log(err);
   }
   if (!booking) {
-    return res.status(500).json({ message: "Unable to Delete" });
+    // return res.status(500).json({ message: "Unable to Delete" });
+    throw new Error(500, "Unable to Delete");
   }
-  return res.status(200).json({ message: "Successfully Deleted" });
+  return res.status(200).json(
+    new ApiResponse(200, booking, "Booking Delete Successfully")  
+  );
 };
