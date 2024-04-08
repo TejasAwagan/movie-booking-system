@@ -2,14 +2,10 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import Admin from "../models/Admin";
 import Movie from "../models/Movie";
-import {ApiError} from "../utils/ApiError";
-import {ApiResponse} from "../utils/ApiResponse";
-
 export const addMovie = async (req, res, next) => {
   const extractedToken = req.headers.authorization.split(" ")[1];
   if (!extractedToken && extractedToken.trim() === "") {
-    // return res.status(404).json({ message: "Token Not Found" });
-    throw new ApiError(404, "Token Not Found");
+    return res.status(404).json({ message: "Token Not Found" });
   }
 
   let adminId;
@@ -17,8 +13,7 @@ export const addMovie = async (req, res, next) => {
   // verify token
   jwt.verify(extractedToken, process.env.SECRET_KEY, (err, decrypted) => {
     if (err) {
-      // return res.status(400).json({ message: `${err.message}` });
-      throw new ApiError(404, `${err.message}`);
+      return res.status(400).json({ message: `${err.message}` });
     } else {
       adminId = decrypted.id;
       return;
@@ -26,7 +21,8 @@ export const addMovie = async (req, res, next) => {
   });
 
   //create new movie
-  const { title, description, releaseDate, posterUrl, featured, actors } = req.body;
+  const { title, description, releaseDate, posterUrl, featured, actors } =
+    req.body;
   if (
     !title &&
     title.trim() === "" &&
@@ -35,8 +31,7 @@ export const addMovie = async (req, res, next) => {
     !posterUrl &&
     posterUrl.trim() === ""
   ) {
-    // return res.status(422).json({ message: "Invalid Inputs" });
-    throw new ApiError(422, "Invalid Inputs");
+    return res.status(422).json({ message: "Invalid Inputs" });
   }
 
   let movie;
@@ -62,12 +57,10 @@ export const addMovie = async (req, res, next) => {
   }
 
   if (!movie) {
-    // return res.status(500).json({ message: "Request Failed" });
-    throw new ApiError(500,"Request Failed");
+    return res.status(500).json({ message: "Request Failed" });
   }
 
-  return res.status(201).json(new ApiResponse(201, movie, "Movie Added Successfully"));
-  
+  return res.status(201).json({ movie });
 };
 
 export const getAllMovies = async (req, res, next) => {
@@ -80,12 +73,9 @@ export const getAllMovies = async (req, res, next) => {
   }
 
   if (!movies) {
-    // return res.status(500).json({ message: "Request Failed" });
-    throw new ApiError(500, "Request Failed")
+    return res.status(500).json({ message: "Request Failed" });
   }
-  return res.status(200).json(new ApiResponse(200, movies, "Movie fetched successfully"));
-  // new ApiResponse(200, {movies}, "Movie fetched successfully")
-
+  return res.status(200).json({ movies });
 };
 
 export const getMovieById = async (req, res, next) => {
@@ -98,11 +88,8 @@ export const getMovieById = async (req, res, next) => {
   }
 
   if (!movie) {
-    // return res.status(404).json({ message: "Invalid Movie ID" });
-    throw new ApiError(404, "Invalid Movie ID")
+    return res.status(404).json({ message: "Invalid Movie ID" });
   }
 
-  return res.status(200).json(new ApiResponse(200, movie ,"Movie Id Fetch Successfully"));
-  
-
+  return res.status(200).json({ movie });
 };

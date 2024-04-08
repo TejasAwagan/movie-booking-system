@@ -1,14 +1,11 @@
 import Admin from "../models/Admin";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { ApiError } from "../utils/ApiError";
-import  {ApiResponse} from "../utils/ApiResponse"
 
 export const addAdmin = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email && email.trim() === "" && !password && password.trim() === "") {
-    // return res.status(422).json({ message: "Invalid Inputs" });
-    throw new ApiError(422, "Invalid Inputs")
+    return res.status(422).json({ message: "Invalid Inputs" });
   }
 
   let existingAdmin;
@@ -19,8 +16,7 @@ export const addAdmin = async (req, res, next) => {
   }
 
   if (existingAdmin) {
-    // return res.status(400).json({ message: "Admin already exists" });
-    throw new ApiError(400,"Admin already exists" )
+    return res.status(400).json({ message: "Admin already exists" });
   }
 
   let admin;
@@ -32,19 +28,15 @@ export const addAdmin = async (req, res, next) => {
     return console.log(err);
   }
   if (!admin) {
-    // return res.status(500).json({ message: "Unable to store admin" });
-    throw new ApiError(500, "Unable to store admin")
+    return res.status(500).json({ message: "Unable to store admin" });
   }
-  return res.status(201).json(
-    new ApiResponse (201, admin, "Admin Added Successfully")
-  );
+  return res.status(201).json({ admin });
 };
 
 export const adminLogin = async (req, res, next) => {
   const { email, password } = req.body;
   if (!email && email.trim() === "" && !password && password.trim() === "") {
-    // return res.status(422).json({ message: "Invalid Inputs" });
-    throw new ApiError(422, "Invalid Inputs")
+    return res.status(422).json({ message: "Invalid Inputs" });
   }
   let existingAdmin;
   try {
@@ -53,8 +45,7 @@ export const adminLogin = async (req, res, next) => {
     return console.log(err);
   }
   if (!existingAdmin) {
-    // return res.status(400).json({ message: "Admin not found" });
-    throw new ApiError(400, "Admin not found")
+    return res.status(400).json({ message: "Admin not found" });
   }
   const isPasswordCorrect = bcrypt.compareSync(
     password,
@@ -62,8 +53,7 @@ export const adminLogin = async (req, res, next) => {
   );
 
   if (!isPasswordCorrect) {
-    // return res.status(400).json({ message: "Incorrect Password" });
-    throw new ApiError(400, "Incorrect Password")
+    return res.status(400).json({ message: "Incorrect Password" });
   }
 
   const token = jwt.sign({ id: existingAdmin._id }, process.env.SECRET_KEY, {
@@ -83,12 +73,9 @@ export const getAdmins = async (req, res, next) => {
     return console.log(err);
   }
   if (!admins) {
-    // return res.status(500).json({ message: "Internal Server Error" });
-    throw new ApiError(500, "Internal Server Error")
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  return res.status(200).json(
-    new ApiResponse(200, admins, "Admin Fetched Successfully")
-  );
+  return res.status(200).json({ admins });
 };
 
 export const getAdminById = async (req, res, next) => {
@@ -103,7 +90,5 @@ export const getAdminById = async (req, res, next) => {
   if (!admin) {
     return console.log("Cannot find Admin");
   }
-  return res.status(200).json(
-    new ApiResponse(200, {admin}, "Admin fetched Succesfully") 
-  );
+  return res.status(200).json({ admin });
 };
