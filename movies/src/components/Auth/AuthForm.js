@@ -10,24 +10,50 @@ import {
 import React, { useState } from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Link } from "react-router-dom";
+import { useToasts } from "react-toast-notifications";
+
 const labelStyle = { mt: 1, mb: 1 };
+
 const AuthForm = ({ onSubmit, isAdmin }) => {
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
     password: "",
   });
+
   const [isSignup, setIsSignup] = useState(false);
+  const { addToast } = useToasts();
+
   const handleChange = (e) => {
     setInputs((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({ inputs, signup: isAdmin ? false : isSignup });
+
+    // onSubmit({ inputs, signup: isAdmin ? false : isSignup }).catch(()=>{
+    //   setErrorMessage("Login failed. Please try again.");
+    // })
+
+    // Validation checks
+    if (!inputs.email || !inputs.password || inputs.email === "" || inputs.password === "" ) {
+      addToast("Please fill in all fields.", { appearance: "error",autoDismiss: true,placement: "top-center" });
+      return;
+    }
+
+    try {
+      await onSubmit({ inputs, signup: isAdmin ? false : isSignup });
+      // Show success toast if login is successful
+      addToast("Login successful!", { appearance: "success", autoDismiss: true  });
+    } catch (error) {
+      // Show error toast if login fails
+      addToast("Login failed. Please try again.", { appearance: "error", autoDismiss: true  });
+    }
   };
+
   return (
     <Dialog PaperProps={{ style: { borderRadius: 20 } }} open={true}>
       <Box sx={{ ml: "auto", padding: 1 }}>
@@ -35,6 +61,7 @@ const AuthForm = ({ onSubmit, isAdmin }) => {
           <CloseRoundedIcon />
         </IconButton>
       </Box>
+
       <Typography variant="h4" textAlign={"center"}>
         {isSignup ? "Signup" : "Login"}
       </Typography>
@@ -80,6 +107,7 @@ const AuthForm = ({ onSubmit, isAdmin }) => {
             type={"password"}
             name="password"
           />
+
           <Button
             sx={{ mt: 2, borderRadius: 10, bgcolor: "#2b2d42" }}
             type="submit"
@@ -88,6 +116,7 @@ const AuthForm = ({ onSubmit, isAdmin }) => {
           >
             {isSignup ? "Signup" : "Login"}
           </Button>
+
           {!isAdmin && (
             <Button
               onClick={() => setIsSignup(!isSignup)}
@@ -99,6 +128,7 @@ const AuthForm = ({ onSubmit, isAdmin }) => {
           )}
         </Box>
       </form>
+      
     </Dialog>
   );
 };

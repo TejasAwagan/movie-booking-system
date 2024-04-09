@@ -8,6 +8,7 @@ import AuthForm from "./AuthForm.js";
 const Admin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
   const onResReceived = (data) => {
     console.log(data);
     dispatch(adminActions.login());

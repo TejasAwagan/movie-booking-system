@@ -2,6 +2,19 @@ import mongoose from "mongoose";
 import Bookings from "../models/Bookings";
 import Movie from "../models/Movie";
 import User from "../models/User";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config({path: './.env'});
+
+// Create a transporter using SMTP transport
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    
+    user: `${process.env.EMAIL_ID}`, // Your email
+    pass: `${process.env.EMAIL_PASSWORD}`, // Your password
+  },
+});
 
 export const newBooking = async (req, res, next) => {
   const { movie, date, seatNumber, user } = req.body;
@@ -37,6 +50,18 @@ export const newBooking = async (req, res, next) => {
     await existingMovie.save({ session });
     await booking.save({ session });
     session.commitTransaction();
+
+    // Send an email after booking tickets
+    const mailOptions = {
+      from: "mca22.awagan.tejas.umakant@sunstone.edu.in", // Your email
+      to: existingUser.email, // User's email
+      subject: "Booking Confirmation",
+      html: `<h3>Hi,</h3>
+         <h3>You have successfully booked tickets for <b>${existingMovie.title}<b> on <b>${date}<b></h3>
+         <h3><b>Your seat number(s): ${seatNumber}<b></h3>
+         <h3>Enjoy the movie!</h3>`
+    };
+    await transporter.sendMail(mailOptions);
   } catch (err) {
     return console.log(err);
   }

@@ -6,7 +6,8 @@ import adminRouter from "./routes/admin-routes";
 import movieRouter from "./routes/movie-routes";
 import bookingsRouter from "./routes/booking-routes";
 import cors from "cors";
-dotenv.config();
+
+dotenv.config({path: './.env'});
 const app = express();
 
 // middlewares
@@ -22,3 +23,6 @@ mongoose.connect(
     `mongodb+srv://admin:${process.env.MONGODB_PASSWORD}@cluster0.05ovdxb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 ).then(()=>app.listen(5000, console.log("Connected to Database and server running on port 5000")))
 .catch((error)=>console.log("Error:",error))
+
+
+
