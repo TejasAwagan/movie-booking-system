@@ -22,7 +22,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:5000/admin/login";
+      const url = "https://movie-booking-system-wkpz.onrender.com/admin/login";
       const { data :res } = await axios.post(url, data);
       dispatch(adminActions.login());
       localStorage.setItem("token", res.data);

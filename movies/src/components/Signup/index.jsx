@@ -24,7 +24,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:5000/user/signup";
+      const url = "https://movie-booking-system-wkpz.onrender.com/user/signup";
       // data._id= uuidv4()
 
       console.log(data);

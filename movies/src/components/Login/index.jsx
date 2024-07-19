@@ -21,7 +21,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:5000/user/login";
+      const url = "https://movie-booking-system-wkpz.onrender.com/user/login";
       const { data :res } = await axios.post(url, data);
       localStorage.setItem("token", res.data);
 	    localStorage.setItem("userId", res.id);
