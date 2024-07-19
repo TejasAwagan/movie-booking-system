@@ -30,6 +30,12 @@ function AutoPlay() {
         <div>
         <img alt="img4" src="https://statcdn.fandango.com/MPX/image/NBCU_Fandango/818/451/GxK.jpg" width={"100%"} height={"100%"} />
         </div>
+        <div>
+        <img alt="img5" src="https://static.toiimg.com/photo/108237610.cms" width={"100%"} height={"100%"} />
+        </div>
+        <div>
+        <img alt="img6" src="https://assets-in.bmscdn.com/discovery-catalog/events/et00109952-vhwhzpetud-landscape.jpg" width={"112.5%"} height={"100%"} />
+        </div>
       </Slider>
     </div>
   );

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose") ;
 
 const bookingSchema = new mongoose.Schema({
   movie: {
@@ -21,4 +21,4 @@ const bookingSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Booking", bookingSchema);
+module.exports = mongoose.model("Booking", bookingSchema);

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { getAllMovies } from "../api-helpers/api-helpers";
 import MovieItem from "./Movies/MovieItem";
 import AutoPlay from "./Carousel/Carousel.js";
+import Footer from "./Footer/Footer.js";
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
@@ -37,7 +38,7 @@ const HomePage = () => {
             .slice(0, 4)
             .map((movie, index) => (
               <MovieItem
-                id={movie.id}
+                id={movie._id}
                 title={movie.title}
                 posterUrl={movie.posterUrl}
                 releaseDate={movie.releaseDate}
@@ -55,7 +56,9 @@ const HomePage = () => {
           View All Movies
         </Button>
       </Box>
+      <Footer />
     </Box>
+    
   );
 };
 

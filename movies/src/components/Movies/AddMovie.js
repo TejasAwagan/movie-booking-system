@@ -8,11 +8,14 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { addMovie } from "../../api-helpers/api-helpers";
+import { useNavigate } from "react-router-dom";
+
 const labelProps = {
   mt: 1,
   mb: 1,
 };
 const AddMovie = () => {
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     title: "",
     description: "",
@@ -20,6 +23,7 @@ const AddMovie = () => {
     releaseDate: "",
     featured: false,
   });
+  // const navigate = Navigate();
   const [actors, setActors] = useState([]);
   const [actor, setActor] = useState("");
   const handleChange = (e) => {
@@ -34,6 +38,7 @@ const AddMovie = () => {
     addMovie({ ...inputs, actors })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
+      navigate("/movies")
   };
   return (
     <div>

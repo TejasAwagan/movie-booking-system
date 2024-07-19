@@ -19,3 +19,44 @@ code {
   font-size: 2rem;
 }
 
+/* ///////////////////////////////////////////////////////////////////////// */
+
+.seat {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  background-color: #ccc;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  position: relative; /* Position relative for hover message */
+}
+
+.seat.selected {
+  background-color: #007bff; /* Selected seat color */
+  color: #fff;
+}
+
+.seat.booked {
+  background-color: #ff0000; /* Booked seat color */
+  cursor: not-allowed; /* Change cursor for disabled seat */
+}
+
+.seat:hover {
+  background-color: #66c2ff; /* Hover color for available seats */
+}
+
+.seat.booked:hover::after {
+  content: "Seat already booked"; /* Hover message for booked seats */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff0000;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+

@@ -1,10 +1,10 @@
-import express from "express";
-import {
+const express = require ("express");
+const {
   addAdmin,
   adminLogin,
   getAdminById,
   getAdmins,
-} from "../controllers/admin-controller";
+} = require("../controllers/admin-controller") ;
 
 const adminRouter = express.Router();
 
@@ -13,4 +13,4 @@ adminRouter.post("/login", adminLogin);
 adminRouter.get("/", getAdmins);
 adminRouter.get("/:id", getAdminById);
 
-export default adminRouter;
+module.exports = adminRouter;

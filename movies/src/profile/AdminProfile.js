@@ -1,8 +1,11 @@
 import { Box } from "@mui/system";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAdminById } from "../api-helpers/api-helpers.js";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
+import { List, ListItem, ListItemText, Typography, IconButton} from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {deleteMovie} from "../api-helpers/api-helpers.js";
+
 const AdminProfile = () => {
   const [admin, setAdmin] = useState();
   useEffect(() => {
@@ -10,9 +13,15 @@ const AdminProfile = () => {
       .then((res) => setAdmin(res.admin))
       .catch((err) => console.log(err));
   }, []);
+
+  const handleDelete = (id) => {
+    deleteMovie(id)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
   return (
     <Box width={"100%"} display="flex">
-      <Fragment>
+      <React.Fragment>
         {" "}
         {admin && (
           <Box
@@ -85,13 +94,19 @@ const AdminProfile = () => {
                     >
                       Movie: {movie.title}
                     </ListItemText>
+                    <IconButton
+                      onClick={() => handleDelete(movie._id)}
+                      color="error"
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
                   </ListItem>
                 ))}
               </List>
             </Box>
           </Box>
         )}
-      </Fragment>
+      </React.Fragment>
     </Box>
   );
 };

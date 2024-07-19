@@ -1,71 +1,60 @@
-import Admin from "../models/Admin";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+const { Admin, validate } = require("../models/Admin");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-export const addAdmin = async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email && email.trim() === "" && !password && password.trim() === "") {
-    return res.status(422).json({ message: "Invalid Inputs" });
-  }
-
-  let existingAdmin;
+const addAdmin = async (req, res, next) => {
   try {
-    existingAdmin = await Admin.findOne({ email });
-  } catch (err) {
-    return console.log(err);
-  }
+    const { error } = validate(req.body);
+    if (error)
+      return res.status(400).send({ message: error.details[0].message });
 
-  if (existingAdmin) {
-    return res.status(400).json({ message: "Admin already exists" });
-  }
+    const admin = await Admin.findOne({ email: req.body.email });
+    if (admin)
+      return res
+        .status(409)
+        .send({ message: "Admin with given email already Exist!" });
 
-  let admin;
-  const hashedPassword = bcrypt.hashSync(password);
-  try {
-    admin = new Admin({ email, password: hashedPassword });
-    admin = await admin.save();
-  } catch (err) {
-    return console.log(err);
+    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    await new Admin({ ...req.body, password: hashPassword }).save();
+    res.status(201).send({ message: "Admin created successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error });
   }
-  if (!admin) {
-    return res.status(500).json({ message: "Unable to store admin" });
-  }
-  return res.status(201).json({ admin });
 };
 
-export const adminLogin = async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email && email.trim() === "" && !password && password.trim() === "") {
-    return res.status(422).json({ message: "Invalid Inputs" });
-  }
-  let existingAdmin;
+const adminLogin = async (req, res, next) => {
   try {
-    existingAdmin = await Admin.findOne({ email });
-  } catch (err) {
-    return console.log(err);
-  }
-  if (!existingAdmin) {
-    return res.status(400).json({ message: "Admin not found" });
-  }
-  const isPasswordCorrect = bcrypt.compareSync(
-    password,
-    existingAdmin.password
-  );
+    const crypto = require("crypto");
+    const secretKey = crypto.randomBytes(32).toString("hex");
+    const { error } = validate(req.body);
+    if (error)
+      return res.status(400).send({ message: error.details[0].message });
 
-  if (!isPasswordCorrect) {
-    return res.status(400).json({ message: "Incorrect Password" });
+    const admin = await Admin.findOne({ email: req.body.email });
+    if (!admin)
+      return res.status(401).send({ message: "Invalid Email or Password" });
+
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      admin.password
+    );
+    if (!validPassword)
+      return res.status(401).send({ message: "Invalid Email or Password" });
+
+    const token = admin.generateAuthToken();
+
+    res
+      .status(200)
+      .send({ id: admin.id, data: token, message: "logged in successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: "Internal Server Error" });
   }
-
-  const token = jwt.sign({ id: existingAdmin._id }, process.env.SECRET_KEY, {
-    expiresIn: "7d",
-  });
-
-  return res
-    .status(200)
-    .json({ message: "Authentication Complete", token, id: existingAdmin._id });
 };
 
-export const getAdmins = async (req, res, next) => {
+const getAdmins = async (req, res, next) => {
   let admins;
   try {
     admins = await Admin.find();
@@ -78,7 +67,7 @@ export const getAdmins = async (req, res, next) => {
   return res.status(200).json({ admins });
 };
 
-export const getAdminById = async (req, res, next) => {
+const getAdminById = async (req, res, next) => {
   const id = req.params.id;
 
   let admin;
@@ -92,3 +81,5 @@ export const getAdminById = async (req, res, next) => {
   }
   return res.status(200).json({ admin });
 };
+
+module.exports = { addAdmin, adminLogin, getAdmins, getAdminById };

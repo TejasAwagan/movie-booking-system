@@ -1,8 +1,8 @@
-import User from "../models/User";
-import bcrypt from "bcryptjs";
-import Bookings from "../models/Bookings";
+const {User, validate} = require("../models/User.js");
+const bcrypt = require("bcryptjs");
+const Bookings = require("../models/Bookings");
 
-export const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res, next) => {
   let users;
   try {
     users = await User.find();
@@ -15,51 +15,39 @@ export const getAllUsers = async (req, res, next) => {
   return res.status(200).json({ users });
 };
 
-export const singup = async (req, res, next) => {
-  const { name, email, password } = req.body;
-  if (
-    !name &&
-    name.trim() === "" &&
-    !email &&
-    email.trim() === "" &&
-    !password &&
-    password.trim() === ""
-  ) {
-    return res.status(422).json({ message: "Invalid Inputs" });
-  }
-  const hashedPassword = bcrypt.hashSync(password);
-  let user;
+const singup = async (req, res, next) => {
   try {
-    user = new User({ name, email, password: hashedPassword });
-    user = await user.save();
-  } catch (err) {
-    return console.log(err);
-  }
-  if (!user) {
-    return res.status(500).json({ message: "Unexpected Error Occured" });
-  }
-  return res.status(201).json({ id: user._id });
+		const { error } = validate(req.body);
+			if (error)
+			return res.status(400).send({ message: error.details[0].message });
+
+		const user = await User.findOne({ email: req.body.email });
+		if (user)
+			return res
+				.status(409)
+				.send({ message: "User with given email already Exist!" });
+
+		const salt = await bcrypt.genSalt(Number(process.env.SALT));
+		const hashPassword = await bcrypt.hash(req.body.password, salt);
+		await new User({ ...req.body, password: hashPassword }).save();
+		res.status(201).send({ message: "User created successfully" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: error });
+	}
 };
-export const updateUser = async (req, res, next) => {
+
+const updateUser = async (req, res, next) => {
   const id = req.params.id;
-  const { name, email, password } = req.body;
-  if (
-    !name &&
-    name.trim() === "" &&
-    !email &&
-    email.trim() === "" &&
-    !password &&
-    password.trim() === ""
-  ) {
+  const { password } = req.body;
+  if ( !password && password === "") {
     return res.status(422).json({ message: "Invalid Inputs" });
   }
-  const hashedPassword = bcrypt.hashSync(password);
+  const hashedPassword = await bcrypt.hashSync(password);
 
   let user;
   try {
     user = await User.findByIdAndUpdate(id, {
-      name,
-      email,
       password: hashedPassword,
     });
   } catch (errr) {
@@ -71,7 +59,7 @@ export const updateUser = async (req, res, next) => {
   res.status(200).json({ message: "Updated Sucessfully" });
 };
 
-export const deleteUser = async (req, res, next) => {
+const deleteUser = async (req, res, next) => {
   const id = req.params.id;
   let user;
   try {
@@ -85,35 +73,33 @@ export const deleteUser = async (req, res, next) => {
   return res.status(200).json({ message: "Deleted Successfully" });
 };
 
-export const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email && email.trim() === "" && !password && password.trim() === "") {
-    return res.status(422).json({ message: "Invalid Inputs" });
-  }
-  let existingUser;
+const login = async (req, res, next) => {
   try {
-    existingUser = await User.findOne({ email });
-  } catch (err) {
-    return console.log(err);
-  }
+		const { error } = validate(req.body);
+		if (error)
+			return res.status(400).send({ message: error.details[0].message });
 
-  if (!existingUser) {
-    return res
-      .status(404)
-      .json({ message: "Unable to find user from this ID" });
-  }
+		const user = await User.findOne({ email: req.body.email });
+		if (!user)
+			return res.status(401).send({ message: "Invalid Email or Password" });
 
-  const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
+		const validPassword = await bcrypt.compare(
+			req.body.password,
+			user.password
+		);
+		if (!validPassword)
+			return res.status(401).send({ message: "Invalid Email or Password" });
 
-  if (!isPasswordCorrect) {
-    return res.status(400).json({ message: "Incorrect Password" });
-  }
-
-  return res
-    .status(200)
-    .json({ message: "Login Successfull", id: existingUser._id });
+		const token = user.generateAuthToken();
+    
+		res.status(200).send({ id :user.id ,data: token, message: "logged in successfully" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Internal Server Error" });
+	}
 };
-export const getBookingsOfUser = async (req, res, next) => {
+
+const getBookingsOfUser = async (req, res, next) => {
   const id = req.params.id;
   let bookings;
   try {
@@ -128,7 +114,8 @@ export const getBookingsOfUser = async (req, res, next) => {
   }
   return res.status(200).json({ bookings });
 };
-export const getUserById = async (req, res, next) => {
+
+const getUserById = async (req, res, next) => {
   const id = req.params.id;
   let user;
   try {
@@ -141,3 +128,36 @@ export const getUserById = async (req, res, next) => {
   }
   return res.status(200).json({ user });
 };
+
+const userExist = async(req,res,next) =>{
+  try {
+    const { email,personName, password} = req.params;
+    console.log("email received "+email)
+    const user = await User.findOne({ email });
+    if (user) {
+      res.json({ exists: true });
+    } else {
+
+      let name=personName;
+      let userTocreate = new User({ name, email, password });
+      let userCreated = await userTocreate.save();
+      res.json({ exists: false });
+    }
+  } catch (error) {
+    console.error('Error checking user existence:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+const dataService = async (req,res,next) =>{
+  try {
+		res.status(200).send({message: "Welcome to data service!" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).send({ message: "Internal Server Error" });
+	}
+}
+
+
+module.exports = { getAllUsers,singup,updateUser,deleteUser,getBookingsOfUser,getUserById,login,userExist,dataService };
+

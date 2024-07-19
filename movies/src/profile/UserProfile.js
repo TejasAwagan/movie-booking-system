@@ -1,22 +1,27 @@
-import { Box } from "@mui/system";
-import React, { Fragment, useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Grid,
+  CardContent,
+  CardActions,
+  Card,
+  // ListItem,
+  // ListItemText,
+} from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   deleteBooking,
   getUserBooking,
   getUserDetails,
 } from "../api-helpers/api-helpers";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from "@mui/material";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
 const UserProfile = () => {
-  const [bookings, setBookings] = useState();
-  const [user, setUser] = useState();
+  const [bookings, setBookings] = useState([]);
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
     getUserBooking()
       .then((res) => setBookings(res.bookings))
@@ -29,108 +34,90 @@ const UserProfile = () => {
 
   const handleDelete = (id) => {
     deleteBooking(id)
-      .then((res) => console.log(res))
+      .then((res) => {
+        setBookings(bookings.filter((booking) => booking._id !== id));
+      })
       .catch((err) => console.log(err));
-  }
+  };
 
   return (
-    <Box width={"100%"} display="flex">
-      <Fragment>
-        {" "}
-        {user && (
-          <Box
-            flexDirection={"column"}
-            justifyContent="center"
-            alignItems={"center"}
-            width={"30%"}
-            padding={3}
-          >
-            <AccountCircleIcon
-              sx={{ fontSize: "10rem", textAlign: "center", ml: "9rem" }}
-            />
-            <Typography
-              padding={1}
-              width={"auto"}
-              textAlign={"center"}
-              border={"1px solid #ccc"}
-              borderRadius={6}
-              bgcolor="rgb(148 163 184)"
-              fontSize="1.5rem"
-              fontWeight="600"
-            >
-              Name: {user.name}
+    <Box display="flex" flexDirection="column" alignItems="center">
+      {user && (
+        <Fragment>
+          <Box textAlign="center" mt={3}>
+            <AccountCircleIcon sx={{ fontSize: "10rem", color: "#2196f3" }} />
+            <Typography variant="h4" mt={2} fontWeight="bold">
+              {user.name}
             </Typography>
-            <Typography
-              mt={1}
-              padding={1}
-              width={"auto"}
-              textAlign={"center"}
-              border={"1px solid #ccc"}
-              borderRadius={6}
-              bgcolor="rgb(148 163 184)"
-              fontSize="1.5rem"
-              fontWeight="600"
-            >
-              Email: {user.email}
+            <Typography variant="body1" mt={1}>
+              Email: {user.email} 
             </Typography>
           </Box>
-        )}
-        {bookings && (
-          <Box width={"70%"} display="flex" flexDirection={"column"}>
-            <Typography
-              variant="h3"
-              fontFamily={"verdana"}
-              textAlign="center"
-              mt={3}
-            >
+
+          <Box mt={3} width="100%">
+            <Typography variant="h4" textAlign="center" mb={2} color="#fff">
               Bookings
             </Typography>
-            <Box
-              margin={"auto"}
-              display="flex"
-              flexDirection={"column"}
-              width="80%"
-            >
-              <List>
-                {bookings.map((booking, index) => (
-                  <ListItem
-                    sx={{
-                      bgcolor: "rgb(51 65 85)",
-                      color: "white",
-                      textAlign: "center",
-                      margin: 1,
-                      borderRadius: 18
-                    }}
-                  >
-                    <ListItemText
-                      sx={{ margin: 1, width: "auto", textAlign: "left" }}
-                    >
-                      Movie : {booking.movie.title}
-                    </ListItemText>
 
-                    <ListItemText
-                      sx={{ margin: 1, width: "auto", textAlign: "left" }}
+            <Box
+              width={"100%"}
+              display={"flex"}
+              justifyContent={"center"}
+              marginTop={4}
+            >
+              <Grid container spacing={2}>
+                {bookings.map((booking) => (
+                  <Grid item key={booking._id} xs={12} sm={6} md={4}>
+                    <Card
+                      sx={{
+                        width: "100%",
+                        borderRadius: "10px",
+                        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                      }}
                     >
-                      Seat No : {booking.seatNumber}
-                    </ListItemText>
-                    <ListItemText
-                      sx={{ margin: 1, width: "auto", textAlign: "left" }}
-                    >
-                      Date : {new Date(booking.date).toDateString()}
-                    </ListItemText>
-                    <IconButton
-                      onClick={() => handleDelete(booking._id)}
-                      color="error"
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </ListItem>
+                      <CardContent>
+                        <Typography
+                          variant="h5"
+                          align="center"
+                          color="text.primary"
+                          gutterBottom
+                        >
+                          {booking.movie
+                            ? booking.movie.title
+                            : "Title not available"}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          color="text.secondary"
+                          align="center"
+                          gutterBottom
+                        >
+                          Seat No: {booking.seatNumber}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          color="text.secondary"
+                          align="center"
+                        >
+                          Date: {new Date(booking.date).toDateString()}
+                        </Typography>
+                      </CardContent>
+                      <CardActions sx={{ justifyContent: "center" }}>
+                        <IconButton
+                          onClick={() => handleDelete(booking._id)}
+                          color="error"
+                        >
+                          <DeleteForeverIcon />
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
                 ))}
-              </List>
+              </Grid>
             </Box>
           </Box>
-        )}
-      </Fragment>
+        </Fragment>
+      )}
     </Box>
   );
 };

@@ -1,24 +1,44 @@
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
-import Admin from "../models/Admin";
-import Movie from "../models/Movie";
-export const addMovie = async (req, res, next) => {
+const jwt = require("jsonwebtoken") ;
+const mongoose = require ("mongoose");
+const {Admin, secretKey} = require ("../models/Admin.js");
+// const {secretKey} = require("../models/Admin.js")
+const Movie = require ("../models/Movie");
+// const secretKey = `${process.env.SECRET_KEY}`;
+
+const addMovie = async (req, res, next) => {
   const extractedToken = req.headers.authorization.split(" ")[1];
   if (!extractedToken && extractedToken.trim() === "") {
     return res.status(404).json({ message: "Token Not Found" });
   }
+  let adminId ;
 
-  let adminId;
+  try {
+    // Verify token asynchronously
+    // const decrypted = await jwt.verify(extractedToken, `${process.env.SECRET_KEY}`);
+    // adminId = decrypted.id;
+    adminId = req.body.admin;
+  } catch (err) {
+    return res.status(400).json({ message: `${err.message}` });
+  }
 
-  // verify token
-  jwt.verify(extractedToken, process.env.SECRET_KEY, (err, decrypted) => {
-    if (err) {
-      return res.status(400).json({ message: `${err.message}` });
-    } else {
-      adminId = decrypted.id;
-      return;
-    }
-  });
+
+  // const token = req.headers.authorization;
+
+  // if (!token) {
+  //   return res.status(401).json({ message: "No token provided" });
+  // }
+
+  // try {
+  //   // Verify JWT token
+  //   const decoded = jwt.verify(token, secretKey);
+
+  //   // Extract adminId from decoded token
+  //   req.adminId = decoded.adminId;
+
+  //   next();
+  // } catch (error) {
+  //   return res.status(401).json({ message: "Invalid token" });
+  // }
 
   //create new movie
   const { title, description, releaseDate, posterUrl, featured, actors } =
@@ -63,7 +83,7 @@ export const addMovie = async (req, res, next) => {
   return res.status(201).json({ movie });
 };
 
-export const getAllMovies = async (req, res, next) => {
+ const getAllMovies = async (req, res, next) => {
   let movies;
 
   try {
@@ -78,7 +98,7 @@ export const getAllMovies = async (req, res, next) => {
   return res.status(200).json({ movies });
 };
 
-export const getMovieById = async (req, res, next) => {
+ const getMovieById = async (req, res, next) => {
   const id = req.params.id;
   let movie;
   try {
@@ -93,3 +113,27 @@ export const getMovieById = async (req, res, next) => {
 
   return res.status(200).json({ movie });
 };
+
+ const deleteMovie = async (req, res, next) => {
+  const id = req.params.id;
+  let movie;
+  try {
+    movie = await Movie.findByIdAndDelete(id).populate("bookings admin")
+    console.log(movie);
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await movie.admin.addedMovies.pull(movie);
+    await movie.bookings.movie.pull(movie);
+    await movie.admin.save({ session });
+    await movie.bookings.save({ session });
+    session.commitTransaction();
+  } catch (err) {
+    return console.log(err);
+  }
+  if (!movie) {
+    return res.status(500).json({ message: "Unable to Delete" });
+  }
+  return res.status(200).json({ message: "Successfully Deleted" });
+};  
+
+module.exports = {addMovie, deleteMovie, getMovieById,getAllMovies }

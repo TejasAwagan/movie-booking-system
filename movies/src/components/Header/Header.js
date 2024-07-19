@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   AppBar,
@@ -14,6 +15,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../store/index.js/user-slice";
 import { adminActions } from "../../store/index.js/admin-slice";
+import logo from "logo.png";
 const Header = () => {
   const navigate = useNavigate();
   const [selectedMovie, setSelectedMovie] = useState("");
@@ -40,8 +42,8 @@ const Header = () => {
     <AppBar position="sticky" sx={{ bgcolor: "#2b2d42" }}>
       <Toolbar>
         <Box width="20%">
-          <Link to="/" style={{ color: "white" }}>
-            <MovieCreationIcon />
+          <Link to="/" style={{ }}>
+            {/* <MovieCreationIcon /> */}
           </Link>
         </Box>
         <Box width="50%" marginRight={"auto"} marginLeft="auto">
@@ -76,6 +78,7 @@ const Header = () => {
             onChange={(e, val) => setValue(val)}
             value={value}
             textColor="inherit"
+            indicatorColor="secondary"
           >
             {!isAdminLoggedIn && !isUserLoggedIn && (
               <>
@@ -89,6 +92,7 @@ const Header = () => {
               <>
                 {" "}
                 <Tab LinkComponent={Link} to="/user" label="user" />
+                <Tab LinkComponent={Link} to="/reset-password" label="reset-password" />
                 <Tab
                   onClick={() => dispatch(userActions.logout())}
                   LinkComponent={Link}
@@ -103,6 +107,7 @@ const Header = () => {
                 {" "}
                 <Tab LinkComponent={Link} to="/profile" label="Profile" />
                 <Tab LinkComponent={Link} to="/add" label="Add Movie" />
+                <Tab label="Bookings" LinkComponent={Link} to="/user-bookings" />
                 <Tab
                   onClick={() => dispatch(adminActions.logout())}
                   LinkComponent={Link}

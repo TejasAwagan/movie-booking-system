@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllMovies } from "../../api-helpers/api-helpers.js";
 import CradLayout from "./CradLayout.js";
+import Footer from "../Footer/Footer.js";
 
 const HomeLayout = () => {
   const [movies, setMovies] = useState();
@@ -59,7 +60,10 @@ const HomeLayout = () => {
           View All Movies
         </Button>
       </Box>
+      <Footer />
     </Box>
+
+
   );
 };
 

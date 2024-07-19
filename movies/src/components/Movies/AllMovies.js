@@ -6,6 +6,7 @@ import CradLayout from "../HomePage/CradLayout.js";
 
 const AllMovies = () => {
   const [movies, setMovies] = useState();
+  
   useEffect(() => {
     getAllMovies()
       .then((data) => setMovies(data))

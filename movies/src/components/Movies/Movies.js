@@ -11,7 +11,7 @@ const Movies = () => {
       .catch((err) => console.log(err));
   }, []);
   return (
-    <Box margin={"auto"} marginTop={4}>
+    <Box margin={"auto"} mt={3}>
       <Typography
         margin={"auto"}
         variant="h4"
@@ -20,15 +20,18 @@ const Movies = () => {
         bgcolor={"#900C3F"}
         color="white"
         textAlign={"center"}
+        borderRadius={5}
+        fontWeight={600}
+        fontSize={"3rem"}
       >
-        All Movies
+        In Theaters
       </Typography>
       <Box
         width={"100%"}
         margin="auto"
         marginTop={5}
         display={"flex"}
-        justifyContent="flex-start"
+        justifyContent="center"
         flexWrap={"wrap"}
       >
         {movies &&

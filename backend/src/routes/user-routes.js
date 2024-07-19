@@ -1,5 +1,6 @@
-import express from "express";
-import {
+const express = require("express");
+
+const {
   deleteUser,
   getAllUsers,
   getBookingsOfUser,
@@ -7,7 +8,8 @@ import {
   login,
   singup,
   updateUser,
-} from "../controllers/user-controller";
+  userExist
+} = require("../controllers/user-controller");
 
 const userRouter = express.Router();
 
@@ -18,5 +20,6 @@ userRouter.put("/:id", updateUser);
 userRouter.delete("/:id", deleteUser);
 userRouter.post("/login", login);
 userRouter.get("/bookings/:id", getBookingsOfUser);
+// userRouter.post("/:email/:personName/:password", userExist);
 
-export default userRouter;
+module.exports = userRouter;

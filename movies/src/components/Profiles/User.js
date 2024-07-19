@@ -2,6 +2,7 @@ import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { DeleteForeverOutlined } from "@mui/icons-material/";
+import { useNavigate } from "react-router-dom";
 
 import {
   IconButton,
@@ -11,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { deleteBooking, getUserBookings } from "../../helpers/api-helpers";
-import { useNavigate } from "react-router-dom";
+
 const User = () => {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);

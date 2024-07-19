@@ -31,6 +31,7 @@ export const sendUserAuthRequest = async (data, signup) => {
 export const sendAdminAuthRequest = async (data) => {
   const res = await axios
     .post("/admin/login", {
+      name: data.name,
       email: data.email,
       password: data.password,
     })
@@ -149,4 +150,59 @@ export const getAdminById = async () => {
   return resData;
 };
 
+export const updateUserPassword = async (data) => {
+  let userId = localStorage.getItem("userId");
+  const res = await axios
+    .put(`/user/${userId}`, {
+      ...data,
+      userId: userId,
+    })
+    .catch((err) => console.log(err));
 
+  if (res.status !== 200) {
+    return console.log("Unexpected Error Occured");
+  }
+
+  const resData = await res.data;
+  return resData;
+};
+
+export const deleteMovie = async (id) => {
+  const res = await axios
+    .delete(`/movie/${id}`)
+    .catch((err) => console.log(err));
+
+  if (res.status !== 200) {
+    return console.log("Unepxected Error");
+  }
+
+  const resData = await res.data;
+  return resData;
+};
+
+export const getAllUsers = async () => {
+  const res = await axios
+    .get("/user/")
+    .catch((err) => console.log("Error", err));
+
+  if (res.status !== 200) {
+    return console.log("No Data");
+  }
+
+  const data = await res.data;
+  return data;
+};
+
+export const getBookingById = async(id) =>{
+  const bookingId = id;
+  const res = await axios
+    .get(`/booking/${bookingId}`)
+    .catch((err) => console.log(err));
+
+  if (res.status !== 200) {
+    return console.log("Unexpected Error Occurred");
+  }
+
+  const resData = await res.data;
+  return resData;
+}
